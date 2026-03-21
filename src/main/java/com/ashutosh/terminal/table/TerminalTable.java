@@ -110,7 +110,8 @@ public class TerminalTable {
 	for (ArrayList<String> list : data) {
 	    if (list.size() != this.maxTableLength.size()) {
 		if (this.nullable) {
-		    for (int i = 0; i < (this.maxTableLength.size() - list.size()); i++) {
+		    int itemsToAdd = this.maxTableLength.size() - list.size();
+		    for (int i = 0; i < itemsToAdd; i++) {
 			list.add(this.nullData);
 		    }
 		} else {
@@ -121,13 +122,16 @@ public class TerminalTable {
 	}
 
 	if (this.header != null) {
-	    if (this.nullable) {
-		for (int i = 0; i < (this.maxTableLength.size() - this.header.size()); i++) {
-		    this.header.add(this.nullData);
+	    if (this.header.size() != this.maxTableLength.size()) {
+		if (this.nullable) {
+		    int itemsToAdd = this.maxTableLength.size() - this.header.size();
+		    for (int i = 0; i < itemsToAdd; i++) {
+			this.header.add(this.nullData);
+		    }
+		} else {
+		    throw new MissingFormatWidthException(
+			    "Data Provided is not Balanced. Whether Balance it or state nullable true.");
 		}
-	    } else {
-		throw new MissingFormatWidthException(
-			"Data Provided is not Balanced. Whether Balance it or state nullable true.");
 	    }
 	}
 
