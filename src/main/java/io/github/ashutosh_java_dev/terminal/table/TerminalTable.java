@@ -13,6 +13,7 @@ public class TerminalTable {
     private int paddingRight = 1;
     public boolean nullable = false;
     private String nullData = "null";
+    private String title;
 
     public TerminalTable() {
     }
@@ -69,6 +70,23 @@ public class TerminalTable {
 		    if (length > maxTableLength.get(j)) {
 			maxTableLength.set(j, length);
 		    }
+		}
+	    }
+	}
+
+	if (this.title != null && !this.maxTableLength.isEmpty()) {
+	    int sum = this.maxTableLength.stream().mapToInt(Integer::intValue).sum();
+	    int currentInnerWidth = sum + (this.maxTableLength.size() - 1);
+	    int requiredWidth = this.title.length() + (this.paddingLeft + this.paddingRight);
+	    
+	    if (requiredWidth > currentInnerWidth) {
+		int diff = requiredWidth - currentInnerWidth;
+		int baseAdd = diff / this.maxTableLength.size();
+		int remainder = diff % this.maxTableLength.size();
+		
+		for (int i = 0; i < this.maxTableLength.size(); i++) {
+		    int add = baseAdd + (i < remainder ? 1 : 0);
+		    this.maxTableLength.set(i, this.maxTableLength.get(i) + add);
 		}
 	    }
 	}
@@ -141,10 +159,31 @@ public class TerminalTable {
 
     }
 
+    private void printTitle() {
+	int sum = this.maxTableLength.stream().mapToInt(Integer::intValue).sum();
+	int innerWidth = sum + (this.maxTableLength.size() - 1);
+        
+	int titleLength = this.title.length();
+	int freeSpace = innerWidth - titleLength;
+	int leftSpace = freeSpace / 2;
+	int rightSpace = freeSpace - leftSpace;
+
+	System.out.print("|");
+	System.out.print(" ".repeat(leftSpace));
+	System.out.print(this.title);
+	System.out.print(" ".repeat(rightSpace));
+	System.out.print("|");
+	System.out.println();
+    }
+
     public void build() {
 	this.maxRowLength();
 	this.validate();
 	this.printRow();
+	if (this.title != null) {
+	    this.printTitle();
+	    this.printRow();
+	}
 	if (header != null) {
 	    this.printHeader();
 	    this.printRow();
@@ -176,6 +215,14 @@ public class TerminalTable {
 	    System.out.println("Table refused 'null' input !!! ?");
 	    throw new InputMismatchException("nullData can't be null itself, pls reframe from using it.");
 	}
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getTitle() {
+        return title;
     }
 
 }
