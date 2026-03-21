@@ -1,4 +1,4 @@
-package com.ashutosh.terminal;
+package io.github.ashutosh_java_dev.terminal;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 

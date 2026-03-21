@@ -1,4 +1,4 @@
-package com.ashutosh.terminal.table;
+package io.github.ashutosh_java_dev.terminal.table;
 
 import java.util.ArrayList;
 import java.util.InputMismatchException;
